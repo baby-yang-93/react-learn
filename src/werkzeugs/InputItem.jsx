@@ -2,13 +2,19 @@ import React from 'react';
 import { List, InputItem, WhiteSpace } from 'antd-mobile';
 import { createForm, formShape } from 'rc-form';
 import { Button, WingBlank } from 'antd-mobile';
+import axios from 'axios';
 
 class BasicInputExample extends React.Component {
+
     constructor(props) {
         super(props)
+
+        this.count = 0;
+
         this.login = this.login.bind(this);
         this.state = {
             getYzm: '获取验证码',
+            buttonDisabled: false
         };
     }
 
@@ -19,8 +25,29 @@ class BasicInputExample extends React.Component {
         this.inputRef.focus();
     }
 
+    countdown = () => {
+        if (this.count > 0) {
+            this.setState({ getYzm: this.count-- + "秒后重试", buttonDisabled: true });
+            window.setTimeout(() => { this.countdown(this.count) }, 1000);
+        } else {
+            this.setState({ getYzm: '获取验证码', buttonDisabled: false });
+        }
+    }
+
+    sendCaptcha = () => {
+        axios.get('http://api.apply-dev.lexustestdrive.cn', {
+            params: {
+                phone: this.props.form.getFieldValue('phone')
+            }
+        }).then((response) => {
+            this.count = 5;
+            this.countdown();
+            console.log(response);
+        });
+    }
+
     login() {
-        alert(this.props.form.getFieldValue('inputtitle1'))
+        alert(this.props.form.getFieldValue('password'))
         // this.$axios({
         //     method: "get",
         //     url: 'http://api.apply-dev.lexustestdrive.cn+ExportApplyManage',
@@ -39,25 +66,36 @@ class BasicInputExample extends React.Component {
     }
 
     render() {
-        const { getFieldProps, getFieldValue } = this.props.form;
+        let errors;
+        const { getFieldProps, getFieldError } = this.props.form;
         return (
             <div>
                 <List style={{ paddingTop: '30px' }}>
                     <InputItem
-                        {...getFieldProps('inputtitle1')}
-                        placeholder="title can be icon，image or text"
+                        {...getFieldProps('phone', {
+                            'validateTrigger': 'onBlur',
+                            'rules': [
+                                { type: 'number', required: true, message: "%s必须是%s" }
+                            ]
+                        })}
+                        placeholder="手机号"
                     >
                         <div style={{ backgroundImage: 'url(https://zos.alipayobjects.com/rmsportal/DfkJHaJGgMghpXdqNaKF.png)', backgroundSize: 'cover', height: '22px', width: '22px' }} />
                     </InputItem>
                     <InputItem
-                        {...getFieldProps('inputtitle2')}
-                        placeholder="title can be icon，image or text"
+                        {...getFieldProps('password')}
+                        placeholder="密码"
                     >
                         <div style={{ backgroundImage: 'url(https://zos.alipayobjects.com/rmsportal/DfkJHaJGgMghpXdqNaKF.png)', backgroundSize: 'cover', height: '22px', width: '22px' }} />
                     </InputItem>
                 </List>
-                <Button type="primary" inline size="small" style={{ marginRight: '4px' }} 
-                onClick={()=>{this.setState("getYzm","10秒重新发送")}} >{this.state.getYzm}</Button>
+                {/* 下面是错误输出 */}
+                {(errors = getFieldError('phone')) ? errors.join(',') : null}
+                <br />
+                <Button type="primary" inline size="small" style={{ marginRight: '4px' }}
+                    onClick={this.sendCaptcha}
+                    disabled={this.state.buttonDisabled}
+                >{this.state.getYzm}</Button>
                 <Button type="warning" onClick={this.login}>登录</Button><WhiteSpace />
             </div>
         );
