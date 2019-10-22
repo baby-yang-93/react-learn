@@ -7,8 +7,10 @@ class BasicInputExample extends React.Component {
     constructor(props) {
         super(props)
         this.login = this.login.bind(this);
+        this.yzm = this.yzm.bind(this);
         this.state = {
             getYzm: '获取验证码',
+            type:true,
         };
     }
 
@@ -18,7 +20,15 @@ class BasicInputExample extends React.Component {
     handleClick = () => {
         this.inputRef.focus();
     }
-
+    yzm(){
+        this.setState({type:false})
+        console.log(this.state.type)
+        // if(this.state.type){
+        //     console.log(1111)
+        // }else{
+        //     console.log(222)
+        // }
+    }
     login() {
         alert(this.props.form.getFieldValue('inputtitle1'))
         // this.$axios({
@@ -57,7 +67,8 @@ class BasicInputExample extends React.Component {
                     </InputItem>
                 </List>
                 <Button type="primary" inline size="small" style={{ marginRight: '4px' }} 
-                onClick={()=>{this.setState("getYzm","10秒重新发送")}} >{this.state.getYzm}</Button>
+                onClick={this.yzm}>{this.state.getYzm}</Button>
+              
                 <Button type="warning" onClick={this.login}>登录</Button><WhiteSpace />
             </div>
         );
