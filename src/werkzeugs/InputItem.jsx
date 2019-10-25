@@ -2,15 +2,14 @@ import React from 'react';
 import { List, InputItem, WhiteSpace } from 'antd-mobile';
 import { createForm, formShape } from 'rc-form';
 import { Button, WingBlank } from 'antd-mobile';
-
+import axios from 'axios';
 class BasicInputExample extends React.Component {
     constructor(props) {
         super(props)
-        this.login = this.login.bind(this);
-        this.yzm = this.yzm.bind(this);
         this.state = {
             getYzm: '获取验证码',
-            type:true,
+            type: false,
+            count: 5
         };
     }
 
@@ -20,32 +19,18 @@ class BasicInputExample extends React.Component {
     handleClick = () => {
         this.inputRef.focus();
     }
-    yzm(){
-        this.setState({type:false})
-        console.log(this.state.type)
-        // if(this.state.type){
-        //     console.log(1111)
-        // }else{
-        //     console.log(222)
-        // }
+    yzm = () => {
+        this.setState({ getYzm: this.state.count + 's后重新发送', type: "true" });
+        axios.get('http://api.experience.lexustestdrive.cn')
+            .then(function (response) {
+                console.log(response);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
     }
-    login() {
+    login = () => {
         alert(this.props.form.getFieldValue('inputtitle1'))
-        // this.$axios({
-        //     method: "get",
-        //     url: 'http://api.apply-dev.lexustestdrive.cn+ExportApplyManage',
-        //     params: {
-        //         login_name: ,
-        //         login_pwd: ,
-        //         valid_code:
-        //     }
-        // }).then(res => {
-        //     if(res.data.success) {
-
-        //     } else {
-
-        //     }
-        // });
     }
 
     render() {
@@ -66,9 +51,9 @@ class BasicInputExample extends React.Component {
                         <div style={{ backgroundImage: 'url(https://zos.alipayobjects.com/rmsportal/DfkJHaJGgMghpXdqNaKF.png)', backgroundSize: 'cover', height: '22px', width: '22px' }} />
                     </InputItem>
                 </List>
-                <Button type="primary" inline size="small" style={{ marginRight: '4px' }} 
-                onClick={this.yzm}>{this.state.getYzm}</Button>
-              
+                <Button type="primary" inline size="small" style={{ marginRight: '4px' }}
+                    onClick={this.yzm} disabled={this.state.type}>{this.state.getYzm}</Button>
+
                 <Button type="warning" onClick={this.login}>登录</Button><WhiteSpace />
             </div>
         );
