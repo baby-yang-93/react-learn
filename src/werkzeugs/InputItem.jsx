@@ -12,10 +12,14 @@ class BasicInputExample extends React.Component {
             count: 5,
             hasError: false,
             value: '',
-            errMsg: '111'
+            errMsg: ''
         };
     }
+    // 在render之前调用
+    componentWillMount() {
 
+    }
+    //   在render之后调用
     componentDidMount() {
         // this.autoFocusInst.focus();
     }
@@ -30,7 +34,7 @@ class BasicInputExample extends React.Component {
                 var aaa = setInterval(() => {
                     let count = this.state.count - 1;
                     this.setState({ getYzm: count + "s后重新发送", count: count });
-                    if (count == 0) {
+                    if (count === 0) {
                         this.setState({ getYzm: '获取验证码', type: false, count: 5 });
                         clearInterval(aaa);
                     }
@@ -40,7 +44,7 @@ class BasicInputExample extends React.Component {
             })
     }
     login = () => {
-        alert(this.props.form.getFieldValue('inputtitle1'))
+        alert(this.props.form.getFieldValue('phone'))
     }
     submit = () => {
         this.props.form.validateFields((error, value) => {
@@ -71,37 +75,25 @@ class BasicInputExample extends React.Component {
 
     render() {
         const { getFieldProps, getFieldValue, getFieldError } = this.props.form;
-        let errors;
+        var that= this;
         return (
-            <div>
+            <div style={{ width: '90%' }}>
                 <List style={{ paddingTop: '30px' }}>
-                    <InputItem
-                        {...getFieldProps('inputtitle1')}
-                        placeholder="title can be icon，image or text"
-                    >
-                        <div style={{ backgroundImage: 'url(https://zos.alipayobjects.com/rmsportal/DfkJHaJGgMghpXdqNaKF.png)', backgroundSize: 'cover', height: '22px', width: '22px' }} />
-                    </InputItem>
-                    <p>错误提示</p>
-                    <InputItem
-                        {...getFieldProps('aaa', { onChange() { }, rules: [{ aaa: true }] })}
-                        placeholder="title can be icon，image or text"
-                    >
-                        <div style={{ backgroundImage: 'url(https://zos.alipayobjects.com/rmsportal/DfkJHaJGgMghpXdqNaKF.png)', backgroundSize: 'cover', height: '22px', width: '22px' }} />
-                    </InputItem>
+                    <InputItem {...getFieldProps('phone', { onChange(v) {
+                        if (v.replace(/\s/g, '').length < 11) {
+                            that.setState({ hasError: true,errMsg:'' });
+                        } else { 
+                            that.setState({ hasError: false,});
+                        }
+                        that.setState({v});
+                    }, rules: [{ number: true }] })} placeholder="请输入您的手机号"
+                        onBlur={this.onBlur} error={this.state.hasError}></InputItem>
+                    <p>{this.state.errMsg}</p>
+                    <InputItem {...getFieldProps('psw', { onChange() { }, rules: [{ psw: true }] })} placeholder="请输入您的密码"
+                        onBlur={this.onBlur} error={this.state.hasError} ></InputItem>
                 </List>
-                <Button type="primary" inline size="small" style={{ marginRight: '4px' }}
-                    onClick={this.yzm} disabled={this.state.type}>{this.state.getYzm}</Button>
+                <Button type="primary" inline size="small" style={{ marginRight: '4px' }} onClick={this.yzm} disabled={this.state.type}>{this.state.getYzm}</Button>
                 <Button type="warning" onClick={this.login, this.submit}>登录</Button><WhiteSpace />
-                <hr />
-                <InputItem
-                    type="phone"
-                    placeholder="input your phone"
-                    error={this.state.hasError}
-                    onChange={this.onChange}
-                    value={this.state.value}
-                    onBlur={this.onBlur}
-                >手机号码</InputItem>
-                <p>{this.state.errMsg}</p>
             </div>
         );
     }

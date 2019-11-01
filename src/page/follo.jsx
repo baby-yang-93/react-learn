@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavBar, Icon } from 'antd-mobile';
+import TabExample from '../werkzeugs/navBar.jsx'
 
 export default class TabBarExample extends React.Component {
     constructor(props) {
@@ -11,8 +11,10 @@ export default class TabBarExample extends React.Component {
     }
     render() {
         return (
-            <div>
-                1
+            <div >
+                <div>
+                    <TabExample titleName='好友动态' titleName2='关注的人'></TabExample>
+                </div>
             </div>
         )
     }

@@ -1,7 +1,7 @@
 import React from 'react';
 import { TabBar } from 'antd-mobile';
 import '../App.css';
-
+import Follo from '../page/follo.jsx'
 import {Link} from "react-router-dom";
 
 
@@ -43,8 +43,10 @@ export default class TabBarExample extends React.Component {
             onPress={() => { this.setState({ selectedTab: 'redTab', }); }}
             data-seed="logId1">
             {<div style={{ backgroundColor: '#F84E60', height: '100%', textAlign: 'center' }}>
+              <Follo />
+            </div>}  
 
-            </div>}
+            
           </TabBar.Item>
           <TabBar.Item
             icon={<div style={{ width: '22px', height: '22px', background: 'url(img/msgN.png) center center /  21px 21px no-repeat' }} />}

@@ -19,7 +19,7 @@ export default class TabBarExample extends React.Component {
                     <NavBar mode="light" icon={<Icon type="left" />} onLeftClick={() => window.history.go(-1)}
                         rightContent={<Link to='/reg' style={{ color: '#108ee9' }}>注册</Link>}></NavBar>
                 </div>
-                <TabExample></TabExample>
+                <TabExample titleName='账号登录' titleName2="验证码登录"></TabExample>
             </div>
         )
     }
